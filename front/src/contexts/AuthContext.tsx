@@ -1,5 +1,13 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { Env } from "@/config/env";
+import QueryString from "qs";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import { toast } from "sonner";
 
 interface IAuthContextValue {
   signedIn: boolean;
@@ -17,24 +25,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(false);
 
   const signInWithGoogle = useCallback(() => {
-    setSignedIn(true);
-    toast.info('Entrar com o Google!');
+    const baseURL = "https://accounts.google.com/o/oauth2/v2/auth";
+    const options = QueryString.stringify({
+      client_id: Env.googleClientId,
+      redirect_uri: "http://localhost:5173/callbacks/google",
+      response_type: "code",
+      scope: "email profile",
+    });
+
+    window.location.href = `${baseURL}?${options}`;
   }, []);
 
   const signOut = useCallback(() => {
     setSignedIn(false);
-    toast.info('Sair!');
+    toast.info("Sair!");
   }, []);
 
-  const value = useMemo<IAuthContextValue>(() => ({
-    signedIn,
-    signInWithGoogle,
-    signOut,
-  }), [signedIn, signInWithGoogle, signOut]);
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo<IAuthContextValue>(
+    () => ({
+      signedIn,
+      signInWithGoogle,
+      signOut,
+    }),
+    [signedIn, signInWithGoogle, signOut]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

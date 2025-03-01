@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 
 import { GoogleSignInController } from './controllers/GoogleSignInController';
 import { authMiddleware } from './middlewares/authMiddleware';
