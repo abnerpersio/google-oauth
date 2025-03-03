@@ -1,15 +1,16 @@
-import { Button } from '@/components/Button';
-import { useAuth } from '@/contexts/AuthContext';
-import { DoorOpenIcon } from 'lucide-react';
+import { useAuth } from "@/app/hooks/use-auth";
+import { Button } from "@/ui/components/button";
+import { DoorOpenIcon } from "lucide-react";
 
-export function Home() {
-  const { signOut } = useAuth();
+export default function Home() {
+  const { signOut, profile } = useAuth();
 
   return (
     <div className="text-center">
       <h1 className="text-3xl font-medium tracking-tight">
-        Bem-vindo(a)!
+        Bem-vindo(a), {profile.firstName} ({profile.email})!
       </h1>
+
       <p className="text-muted-foreground">
         Você está na área privada do sistema...
       </p>
